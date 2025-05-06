@@ -102,23 +102,27 @@ app.post("/upload", upload.single("excelFile"), (req, res) => {
           paras: [],
         };
 
-        for (let dayRow = element.s.r + 1; dayRow <= element.e.r; dayRow++) {
+        for (let dayRow = element.s.r; dayRow <= element.e.r; dayRow++) {
           const para = {};
           para.number =
             worksheet[
               XLSX.utils.encode_cell({ r: dayRow, c: mergedRange.s.c + 1 })
             ]?.v || "";
-          para.disciplina =
+          para.name =
             worksheet[
               XLSX.utils.encode_cell({ r: dayRow, c: mergedRange.s.c + 2 })
             ]?.v || "";
-          para.prepod =
+          para.disciplina =
             worksheet[
               XLSX.utils.encode_cell({ r: dayRow, c: mergedRange.s.c + 3 })
             ]?.v || "";
-          para.kab =
+          para.prepod =
             worksheet[
               XLSX.utils.encode_cell({ r: dayRow, c: mergedRange.s.c + 4 })
+            ]?.v || "";
+          para.kab =
+            worksheet[
+              XLSX.utils.encode_cell({ r: dayRow, c: mergedRange.s.c + 5 })
             ]?.v || "";
 
           if (para.number || para.disciplina || para.prepod || para.kab) {
