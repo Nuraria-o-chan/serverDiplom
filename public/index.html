@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Excel Parser</title>
+  </head>
+  <body>
+    <input type="file" id="excelFile" name="excelFile" />
+    <button onclick="uploadFile()">Upload</button>
+    <div id="result"></div>
+
+    <script>
+      async function uploadFile() {
+        const fileInput = document.getElementById("excelFile");
+        const file = fileInput.files[0];
+
+        if (!file) {
+          alert("Please select a file");
+          return;
+        }
+
+        const formData = new FormData();
+        formData.append("excelFile", file);
+
+        try {
+          const response = await fetch("http://localhost:3001/upload", {
+            method: "POST",
+            body: formData,
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+
+          const jsonData = await response.json();
+          localStorage.setItem("excelData", JSON.stringify(jsonData));
+          displayData();
+        } catch (error) {
+          console.error("Error:", error);
+          document.getElementById(
+            "result"
+          ).innerText = `Error: ${error.message}`;
+        }
+      }
+
+      function displayData() {
+        const resultDiv = document.getElementById("result");
+        const storedData = localStorage.getItem("excelData");
+        if (storedData) {
+          const data = JSON.parse(storedData);
+          resultDiv.innerHTML =
+            "<pre>" + JSON.stringify(data, null, 2) + "</pre>";
+        } else {
+          resultDiv.innerText = "No data to display.";
+        }
+      }
+
+      window.onload = displayData;
+    </script>
+  </body>
+</html>
